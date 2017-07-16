@@ -41,7 +41,7 @@ public class Stream {
         return this;
     }
 
-    public <T> Stream end(Task.End<T> end) {
+    public <T> void end(Task.End<T> end) {
         CompletableFuture<T> future = linkedList.peekLast();
         CompletableFuture<Void> nextFuture;
         if (future == null) {
@@ -50,7 +50,6 @@ public class Stream {
             nextFuture = future.thenAcceptAsync(end::run, executorService);
         }
         linkedList.addLast(nextFuture);
-        return this;
     }
 
 }
