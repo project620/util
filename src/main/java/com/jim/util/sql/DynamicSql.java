@@ -31,25 +31,16 @@ public class DynamicSql {
     }
 
 
+    @SuppressWarnings("unchecked")
     public Object[] getParams() {
         final List<ParameterMapping> mappings = boundSql.getParameterMappings();
         final Object[] result = new Object[mappings.size()];
-        final Map<String, Object> paramsMap = convertObjectToMap(params);
+        final Map<String, Object> paramsMap = (HashMap<String, Object>) boundSql.getParameterObject();
         for(int i = 0; i < mappings.size(); i++) {
             final ParameterMapping mapping = mappings.get(i);
             final String property = mapping.getProperty();
             final Object value = paramsMap.get(property);
             result[i] = value;
-        }
-        return result;
-    }
-
-
-    @SuppressWarnings("unchecked")
-    private Map<String, Object> convertObjectToMap(final Object parameter) {
-        final Map<String, Object> result = new HashMap<>();
-        if (parameter instanceof Map<?, ?>) {
-            return (Map<String, Object>) parameter;
         }
         return result;
     }

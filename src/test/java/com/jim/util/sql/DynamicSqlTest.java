@@ -28,4 +28,21 @@ public class DynamicSqlTest {
         System.out.println(sql);
     }
 
+    @Test
+    public void testObject() {
+        final String statementId = UserMapper.class.getName() + "." + "getUser";
+        final User user = new User();
+        user.tableName = "hello";
+        user.userName = "world";
+        final DynamicSql dynamicSql = new DynamicSql(statementId, user);
+        final String sql = dynamicSql.getSql();
+        System.out.println(sql);
+    }
+
+
+    public class User{
+        String tableName;
+        String userName;
+    }
+
 }
