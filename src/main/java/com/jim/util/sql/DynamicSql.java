@@ -1,5 +1,6 @@
 package com.jim.util.sql;
 
+import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Map;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMapping;
+import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.apache.ibatis.session.Configuration;
 
 /**
@@ -16,21 +18,28 @@ import org.apache.ibatis.session.Configuration;
 public class DynamicSql {
 
     private final BoundSql boundSql;
-    private final Object params;
+    private final MappedStatement mappedStatement;
 
     public DynamicSql(final String statementId, final Object params) {
-        this.params = params;
         final Configuration configuration = MapperRegister.configuration;
-        final MappedStatement statement = configuration.getMappedStatement(statementId);
-        boundSql = statement.getBoundSql(params);
+        mappedStatement = configuration.getMappedStatement(statementId);
+        boundSql = mappedStatement.getBoundSql(params);
     }
 
+
+    /**
+     *
+     * @return 返回带?占位符的sql
+     */
 
     public String getSql() {
         return boundSql.getSql();
     }
 
 
+    /**
+     * @return 返回已经排好序的sql参数
+     */
     @SuppressWarnings("unchecked")
     public Object[] getParams() {
         final List<ParameterMapping> mappings = boundSql.getParameterMappings();
@@ -43,6 +52,15 @@ public class DynamicSql {
             result[i] = value;
         }
         return result;
+    }
+
+    /**
+     * 设置PreparedStatement 各种类型参数
+     * @param preparedStatement
+     */
+    public void completePreparedStatementParams(final PreparedStatement preparedStatement) {
+        final DefaultParameterHandler handler = new DefaultParameterHandler(mappedStatement, boundSql.getParameterObject(), boundSql);
+        handler.setParameters(preparedStatement);
     }
 
 }
