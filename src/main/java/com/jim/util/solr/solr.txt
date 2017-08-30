@@ -1,2 +1,0 @@
-1.下载solr(v6.6): https://lucene.apache.org/solr/
-2.启动/停止solr: solr start/stop -p/stop all
