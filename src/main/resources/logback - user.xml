@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="true" scanPeriod="30 seconds">
+
+  <!--  statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" /-->
+  <!-- 根据用户id打印到不同的log文件，需要MDC user -->
+  <!-- for example:
+   1.MDC.put("user", ${your user name})
+   2.MDC.remove("user") 
+ -->
+  <appender name="USER_FILE" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <Key>user</Key>
+            <DefaultValue>unknown</DefaultValue>
+        </discriminator>
+        <sift>
+            <appender name="FILE-${userid}" class="ch.qos.logback.core.FileAppender">
+                <File>log/${user}.log</File>
+                <Append>false</Append>
+                <layout class="ch.qos.logback.classic.PatternLayout">
+                    <Pattern>%d [%thread] %level %mdc %logger{35} - %msg%n</Pattern>
+                </layout>
+            </appender>
+        </sift>
+    </appender>
+
+
+    <!--在日志中打印用户名，需要MDC, user-->
+
+<appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="USER_LOG">
+    <file>logs/debug.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>logs/%d{yyy-MM-dd}.%i.log.gz</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>500MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+      <maxHistory>60</maxHistory>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%X{user} %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger level="INFO" name="USER_FILE">
+    <appender-ref ref="USER_FILE"/>
+
+    <appender-ref ref="USER_LOG"/>
+  </logger>
+
+
+
+</configuration>

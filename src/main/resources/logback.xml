@@ -11,7 +11,7 @@
   <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="DEBUG_LOG">
     <file>logs/debug.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>logs/cpm-%d{yyy-MM-dd}.%i.log.gz</fileNamePattern>
+      <fileNamePattern>logs/debug/%d{yyy-MM-dd}.%i.log.gz</fileNamePattern>
       <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
         <maxFileSize>500MB</maxFileSize>
       </timeBasedFileNamingAndTriggeringPolicy>
@@ -29,7 +29,7 @@
         <level>ERROR</level>
     </filter>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>logs/error/error-%d{yyy-MM-dd}.log.gz</fileNamePattern>
+      <fileNamePattern>logs/error/%d{yyy-MM-dd}.log.gz</fileNamePattern>
       <maxHistory>60</maxHistory>
     </rollingPolicy>
     <encoder>
