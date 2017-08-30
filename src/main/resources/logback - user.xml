@@ -13,7 +13,7 @@
             <DefaultValue>unknown</DefaultValue>
         </discriminator>
         <sift>
-            <appender name="FILE-${userid}" class="ch.qos.logback.core.FileAppender">
+            <appender name="FILE-${user}" class="ch.qos.logback.core.FileAppender">
                 <File>log/${user}.log</File>
                 <Append>false</Append>
                 <layout class="ch.qos.logback.classic.PatternLayout">
