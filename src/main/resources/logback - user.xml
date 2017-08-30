@@ -2,11 +2,14 @@
 <configuration debug="false" scan="true" scanPeriod="30 seconds">
 
   <!--  statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" /-->
-  <!-- 根据用户id打印到不同的log文件，需要MDC user -->
+
   <!-- for example:
    1.MDC.put("user", ${your user name})
    2.MDC.remove("user") 
  -->
+ 
+ 
+   <!-- 根据用户id打印到不同的log文件，需要MDC user -->
   <appender name="USER_FILE" class="ch.qos.logback.classic.sift.SiftingAppender">
         <discriminator>
             <Key>user</Key>
