@@ -11,7 +11,7 @@ public interface TimeTracker {
 	
 	
 	/**
-	 * the task that you want to know how many time it will cost
+	 * the task that you want to know how long it will take
 	 */
 	void run();
 	
