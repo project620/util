@@ -1,5 +1,7 @@
 package com.jim.util.string;
 
+import java.util.HashMap;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -62,4 +64,19 @@ public class StringUtilTest {
 	}
 	
 
+	@Test
+	public void testString() {
+		final String a = "Aa";
+		final String b = "BB";
+		final HashMap<String, Object> map = new HashMap<>();
+		map.put(a, "123");
+		map.put(b, "12345");
+		System.out.println(a.hashCode() + " -- " + b.hashCode());
+		
+		System.out.println("a == " + map.get(a));
+		System.out.println("b == " + map.get(b));
+		
+		System.out.println(a.equals(b));
+	}
+	
 }
