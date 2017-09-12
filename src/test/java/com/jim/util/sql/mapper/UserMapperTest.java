@@ -27,10 +27,10 @@ public class UserMapperTest {
 	
 	@BeforeClass
 	public static void setUp() throws IOException {
+		System.out.println("set up UserMapperTest");
 		 Reader reader = Resources.getResourceAsReader("com/jim/util/sql/mapper/mybatis-config.xml");
 		    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
 		    reader.close();
-		    sqlSessionFactory.getConfiguration().addMapper(UserMapper.class);
 		    // populate in-memory database
 		    final SqlSession session = sqlSessionFactory.openSession();
 		    final Connection conn = session.getConnection();
@@ -51,12 +51,13 @@ public class UserMapperTest {
 		 for(final Map<String, Object> user : users) {
 			 Assert.assertEquals(user.get("NAME"), "jim");
 		 }
+		 sqlSession.close();
 	}
 	
 	
 	@AfterClass
 	public static void shutDown() {
-		System.out.println("shut down");
+		System.out.println("shut down UserMapperTest");
 	}
 	
 }

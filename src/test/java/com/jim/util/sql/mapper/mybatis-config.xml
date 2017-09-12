@@ -28,9 +28,13 @@
 			<dataSource type="UNPOOLED">
 				<property name="driver" value="org.hsqldb.jdbcDriver" />
 				<property name="url" value="jdbc:hsqldb:mem:basetest" />
-				<property name="username" value="sa" />
+				<property name="username" value="jim" />
 			</dataSource>
 		</environment>
 	</environments>
+	
+	<mappers>
+		<mapper class = "com.jim.util.sql.mapper.UserMapper"></mapper>
+	</mappers>
 
 </configuration>
