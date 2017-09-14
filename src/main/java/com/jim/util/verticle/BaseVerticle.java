@@ -60,7 +60,12 @@ public class BaseVerticle extends AbstractVerticle {
 				deployFuture.addLast(currentFuture);
 			}
 		}
-		deployFuture.getLast().setHandler(finalFuture -> startFuture.complete());
+		if (deployFuture.size() != 0) {
+			deployFuture.getLast().setHandler(finalFuture -> startFuture.complete());
+		} else {
+			startFuture.complete();
+		}
+		
 	}
 
 	private Collection<List<Verticle>> getDeployedBean() {
