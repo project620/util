@@ -13,12 +13,16 @@ import io.vertx.ext.unit.junit.VertxUnitRunner;
  *
  */
 @RunWith(VertxUnitRunner.class)
-public class BaseVerticleTest {
+public class SpringContextVerticleTest {
 
 	
 	@Test
 	public void testDeploySpringVerticle(final TestContext context) {
 		final Vertx vertx = Vertx.vertx();
-		vertx.deployVerticle(new BaseVerticle(), context.asyncAssertSuccess());
+		
+		vertx.deployVerticle(new SpringContextVerticle(), context.asyncAssertSuccess(rs -> {
+			vertx.undeploy(rs, context.asyncAssertSuccess());
+		}));
+		
 	}
 }

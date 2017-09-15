@@ -11,6 +11,14 @@ public class Verticle2 extends AbstractVerticle {
 
 	@Override
 	public void start(final Future<Void> startFuture) throws Exception {
+		System.out.println("start " + this.deploymentID());
 		startFuture.complete();
+	}
+	
+	
+	@Override
+	public void stop(final Future<Void> stopFuture) throws Exception {
+		System.out.println("stop " + this.deploymentID());
+		stopFuture.complete();
 	}
 }
