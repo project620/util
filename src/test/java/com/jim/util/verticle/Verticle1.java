@@ -12,7 +12,7 @@ public class Verticle1 extends AbstractVerticle{
 	@Override
 	public void start(final Future<Void> startFuture) throws Exception {
 		System.out.println("start " + this.deploymentID());
-		startFuture.complete();
+		startFuture.fail("123");
 	}
 
 	

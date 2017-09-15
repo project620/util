@@ -124,10 +124,10 @@ public class SpringContextVerticle extends AbstractVerticle {
 				if (rs.succeeded()) {
 					final String deploymentId = rs.result();
 					sameLevelDeploymentId.add(deploymentId);
-					logger.info("deploy verticle {} successfully", verticle.getClass().getName());
+					logger.info("deploy verticle [class: {}, id: {}] successfully.", verticle.getClass().getName(), deploymentId);
 					deployFuture.complete();
 				} else {
-					logger.error(String.format("deploy verticle %1$s failed", verticle.getClass().getName()),
+					logger.error(String.format("deploy verticle [class: %1$s] failed", verticle.getClass().getName()),
 							rs.cause());
 					deployFuture.fail(rs.cause());
 				}
