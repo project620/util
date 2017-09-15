@@ -33,13 +33,10 @@ public class SpringContextVerticle extends AbstractVerticle {
 
 	public static ApplicationContext applicationContext;
 
-	public static final int DEFAULT_DEPLOY_ORDER = Integer.MAX_VALUE;
-
 	public static final String CURRENT_BEAN_NAME = "SpringContextVerticle";
 
 	private static final Logger logger = LoggerFactory.getLogger(SpringContextVerticle.class);
 
-	private final List<List<String>> deploymentIds = new ArrayList<List<String>>();
 	
 	static {
 		applicationContext = new AnnotationConfigApplicationContext(SpringContextVerticle.class);
@@ -89,12 +86,11 @@ public class SpringContextVerticle extends AbstractVerticle {
 			}
 			final Verticle verticle = applicationContext.getBean(beanName, Verticle.class);
 			final Deploy deploy = verticle.getClass().getAnnotation(Deploy.class);
-			final Integer order = DEFAULT_DEPLOY_ORDER;
 			if (deploy == null) {
 				continue;
 			}
-			verticleMap.putIfAbsent(order, new ArrayList<>());
-			verticleMap.get(order).add(verticle);
+			verticleMap.putIfAbsent(deploy.order(), new ArrayList<>());
+			verticleMap.get(deploy.order()).add(verticle);
 		}
 		return verticleMap.values();
 	}
@@ -117,13 +113,11 @@ public class SpringContextVerticle extends AbstractVerticle {
 	private Future<Void> deployVerticles(final List<Verticle> verticles) {
 		final Future<Void> future = Future.future();
 		final List<Future> deployFutures = new ArrayList<>();
-		final List<String> sameLevelDeploymentId = new ArrayList<>(verticles.size());
 		for (final Verticle verticle : verticles) {
 			final Future<Void> deployFuture = Future.future();
 			vertx.deployVerticle(verticle, rs -> {
 				if (rs.succeeded()) {
 					final String deploymentId = rs.result();
-					sameLevelDeploymentId.add(deploymentId);
 					logger.info("deploy verticle [class: {}, id: {}] successfully.", verticle.getClass().getName(), deploymentId);
 					deployFuture.complete();
 				} else {
@@ -137,7 +131,6 @@ public class SpringContextVerticle extends AbstractVerticle {
 		CompositeFuture.join(deployFutures).setHandler(rs -> {
 			future.complete();
 		});
-		deploymentIds.add(sameLevelDeploymentId);
 		return future;
 	}
 
@@ -145,55 +138,7 @@ public class SpringContextVerticle extends AbstractVerticle {
 	public void stop(final Future<Void> stopFuture) throws Exception {
 		logger.info("unDeploy verticle {} ", this.getClass().getName());
 		stopFuture.complete();
-//		final List<List<String>> copyDeploymentIds = new ArrayList<>(deploymentIds);
-//		Collections.reverse(copyDeploymentIds);
-//		
-//		final LinkedList<Future<Void>> deployFuture = new LinkedList<>();
-//		final Iterator<List<String>> sameLevelIdIterators = copyDeploymentIds.iterator();
-//		while (sameLevelIdIterators.hasNext()) {
-//			final List<String> sameLevelIds = sameLevelIdIterators.next();
-//			if (deployFuture.size() == 0) {
-//				final Future<Void> firstDeployFuture = unDeployVerticles(sameLevelIds);
-//				deployFuture.addLast(firstDeployFuture);
-//			} else {
-//				final Future<Void> preDeployFuture = deployFuture.getLast();
-//				final Future<Void> currentFuture = Future.future();
-//				preDeployFuture.setHandler(rs -> {
-//					unDeployVerticles(sameLevelIds).setHandler(deploy -> currentFuture.complete());
-//				});
-//				deployFuture.addLast(currentFuture);
-//			}
-//		}
-//		if (deployFuture.size() != 0) {
-//			deployFuture.getLast().setHandler(finalFuture -> stopFuture.complete());
-//		} else {
-//			stopFuture.complete();
-//		}
 
 	}
-
-//	@SuppressWarnings("rawtypes")
-//	private Future<Void> unDeployVerticles(final List<String> sameLevelDeploymentIds) {
-//		final Future<Void> future = Future.future();
-//		final List<Future> deployFutures = new ArrayList<>();
-//		for (final String deploymentId : sameLevelDeploymentIds) {
-//			final Future<Void> deployFuture = Future.future();
-//			vertx.undeploy(deploymentId, rs -> {
-//				if (rs.succeeded()) {
-//					logger.info("undeploy verticle {} successfully", deploymentId);
-//					deployFuture.complete();
-//				} else {
-//					logger.error(String.format("undeploy verticle %1$s failed", deploymentId),
-//							rs.cause());
-//					deployFuture.fail(rs.cause());
-//				}
-//			});
-//			deployFutures.add(deployFuture);
-//		}
-//		CompositeFuture.join(deployFutures).setHandler(rs -> {
-//			future.complete();
-//		});
-//		return future;
-//	}
 
 }

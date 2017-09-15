@@ -12,6 +12,10 @@ public class Verticle2 extends AbstractVerticle {
 	@Override
 	public void start(final Future<Void> startFuture) throws Exception {
 		System.out.println("start " + this.deploymentID());
+		vertx.eventBus().consumer("v2", rs -> {
+			System.out.println("v2");
+			rs.reply("end");
+		});
 		startFuture.complete();
 	}
 	
